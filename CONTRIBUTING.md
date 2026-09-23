@@ -59,8 +59,8 @@ Manager dashboard shows aggregate availability only, no individual history.
 Refs: REQ-HR-01, REQ-HR-02
 ```
 
-**Types:** `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `ci`, `build`, `perf`  
-**Scope:** the pillar (`hr`, `it`, `fleet`, `assets`) or `nfr`/`infra` for cross-cutting work  
+**Types:** `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `ci`, `build`, `perf`
+**Scope:** the pillar (`hr`, `it`, `fleet`, `assets`) or `nfr`/`infra` for cross-cutting work
 **Footer:** `Refs: REQ-XX-NN[, REQ-XX-NN...]` — required on any commit that implements or modifies a requirement
 
 ## Pull requests
@@ -112,6 +112,7 @@ A `CODEOWNERS` file assigns required reviewers by path:
 /backend/                        @architect-reviewer @compliance-reviewer
 /frontend/                       @design-reviewer
 /docs/master-product-guide.md    @product-lead
+/docs/design-system.md           @design-reviewer @product-lead
 /.agents/skills/                 @product-lead
 ```
 
@@ -148,6 +149,8 @@ Every requirement has a stable ID defined in [master guide §3–§4](docs/maste
 ## Changing the master product guide
 
 `docs/master-product-guide.md` is the source of truth every agent's `SKILL.md` cites by section number — changing it changes what every agent builds against. Treat edits to it like any other change: open a PR, get it reviewed (see `CODEOWNERS` above), and bump the version row in its Document Control table with a summary of what changed and why. Don't let scope decisions get made silently in code review that should have been a spec change first.
+
+The same discipline applies to `docs/design-system.md`, which `agent_designer`'s `SKILL.md` cites the same way (master guide §8.2). It's a narrower document than the master guide, but a token or component-state change there still cascades to every already-built screen — bump its own Document Control version row, and get a design-literate reviewer on the PR, not just whoever's reviewing the feature the change happened to come up in.
 
 ## Local checks before opening a PR
 
