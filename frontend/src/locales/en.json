@@ -1,0 +1,66 @@
+{
+  "common": {
+    "appName": "BMV Staff Portal",
+    "search": "Search...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "status": "Status",
+    "date": "Date",
+    "actions": "Actions",
+    "language": "Language"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "leaveRequests": "Leave Management",
+    "teamAvailability": "Team Availability",
+    "noticeBoard": "Notice Board",
+    "staffDirectory": "Staff Directory"
+  },
+  "leave": {
+    "title": "My Leave Requests",
+    "newRequest": "New Leave Request",
+    "category": "Category",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "notes": "Notes (optional)",
+    "submitDraft": "Save as Draft",
+    "submitApproval": "Submit for Approval",
+    "categories": {
+      "annual_vacation": "Annual Vacation",
+      "sick_leave": "Sick Leave",
+      "special_leave": "Special Leave",
+      "unpaid_leave": "Unpaid Leave"
+    },
+    "statuses": {
+      "draft": "Draft",
+      "pending_manager": "Pending Manager",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    }
+  },
+  "manager": {
+    "title": "Team Availability Overview",
+    "aggregateNotice": "Works Council compliant aggregate team capacity. No individual sickness history rendered.",
+    "totalMembers": "Total Team Members",
+    "presentMembers": "Present",
+    "scheduledAbsent": "Scheduled Absence",
+    "coverageRate": "Coverage Rate"
+  },
+  "notices": {
+    "title": "Corporate Notices & Policies",
+    "mandatoryNotice": "Mandatory Acknowledgment (ISO 13485 QMS)",
+    "acknowledged": "Read & Acknowledged",
+    "acknowledgeButton": "Read & Acknowledge",
+    "publishedOn": "Published on"
+  },
+  "directory": {
+    "title": "Staff Directory",
+    "syncedNotice": "Automatically synchronized with Active Directory",
+    "name": "Name",
+    "department": "Department",
+    "jobTitle": "Job Title",
+    "email": "Email"
+  }
+}

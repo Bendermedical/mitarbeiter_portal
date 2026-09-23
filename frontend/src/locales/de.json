@@ -1,0 +1,66 @@
+{
+  "common": {
+    "appName": "BMV Mitarbeiterportal",
+    "search": "Suchen...",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "submit": "Einreichen",
+    "status": "Status",
+    "date": "Datum",
+    "actions": "Aktionen",
+    "language": "Sprache"
+  },
+  "nav": {
+    "dashboard": "Übersicht",
+    "leaveRequests": "Urlaubsverwaltung",
+    "teamAvailability": "Team-Verfügbarkeit",
+    "noticeBoard": "Schwarzes Brett",
+    "staffDirectory": "Mitarbeiterverzeichnis"
+  },
+  "leave": {
+    "title": "Meine Urlaubsanträge",
+    "newRequest": "Neuer Urlaubsantrag",
+    "category": "Antragsart",
+    "startDate": "Startdatum",
+    "endDate": "Enddatum",
+    "notes": "Hinweise (optional)",
+    "submitDraft": "Als Entwurf speichern",
+    "submitApproval": "Zur Genehmigung einreichen",
+    "categories": {
+      "annual_vacation": "Jahresurlaub",
+      "sick_leave": "Krankmeldung",
+      "special_leave": "Sonderurlaub",
+      "unpaid_leave": "Unbezahlter Urlaub"
+    },
+    "statuses": {
+      "draft": "Entwurf",
+      "pending_manager": "Ausstehend (Vorgesetzter)",
+      "approved": "Genehmigt",
+      "rejected": "Abgelehnt",
+      "cancelled": "Storniert"
+    }
+  },
+  "manager": {
+    "title": "Team-Verfügbarkeit",
+    "aggregateNotice": "Betriebsratskonforme anonymisierte Team-Kapazität. Keine individuellen Krankheitsdaten sichtbar.",
+    "totalMembers": "Teammitglieder gesamt",
+    "presentMembers": "Anwesend",
+    "scheduledAbsent": "Geplante Abwesenheit",
+    "coverageRate": "Besetzungsquote"
+  },
+  "notices": {
+    "title": "Unternehmensmitteilungen & Richtlinien",
+    "mandatoryNotice": "Verpflichtende Kenntnisnahme (ISO 13485 QMS)",
+    "acknowledged": "Gelesen & Zur Kenntnis genommen",
+    "acknowledgeButton": "Gelesen & Bestätigen",
+    "publishedOn": "Veröffentlicht am"
+  },
+  "directory": {
+    "title": "Mitarbeiterverzeichnis",
+    "syncedNotice": "Automatisch synchronisiert mit Active Directory",
+    "name": "Name",
+    "department": "Abteilung",
+    "jobTitle": "Position",
+    "email": "E-Mail"
+  }
+}

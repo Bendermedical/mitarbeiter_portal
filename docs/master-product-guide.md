@@ -5,11 +5,12 @@
 | Field | Value |
 |---|---|
 | Document | BMV Staff Portal — Master Product Guide |
-| Version | 1.0 |
-| Status | Draft for review |
+| Version | 1.1 |
+| Status | Pillar 1 (HR & Culture) Gate 4 Verified |
 | Owner | Product/IT Leadership, BMV Bender Medical Vertrieb GmbH |
 | Applicable standards | ISO 13485 (QMS documentation discipline), DSGVO/GDPR, German Works Council (Betriebsrat) co-determination |
 | Last updated | 2026-09-22 |
+| Traceability reference | `docs/traceability-log.md` |
 
 Every requirement below carries a stable ID (e.g. `REQ-HR-01`) so it can be traced from spec → build gate → test — required once this is a controlled document under an ISO 13485 QMS.
 

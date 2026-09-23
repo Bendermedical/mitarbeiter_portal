@@ -1,0 +1,13 @@
+# BMV Staff Portal — Traceability Log (ISO 13485 & Regulatory Audit Matrix)
+
+| Requirement ID | Pillar | Description | Implementation Status | Gate 4 Verification / Tests | Reference PR / Commit |
+|---|---|---|---|---|---|
+| **REQ-HR-01** | HR & Culture | Leave requests follow a strict state machine: `Draft → Pending Manager → Approved / Rejected → Cancelled`. Rejection requires mandatory reason. | **IMPLEMENTED & VERIFIED** | `tests/test_leave_state_machine.py`, `frontend/e2e/leave-workflow.spec.ts` | Gate 4 Pass (PR #1 - HR Pillar) |
+| **REQ-HR-02** | HR & Culture | Manager dashboards show only aggregate team availability (e.g. "4 of 5 present"). Individual sick-leave frequency or diagnoses never exposed (BetrVG §87 / DSGVO). | **IMPLEMENTED & VERIFIED** | `tests/test_rbac_privacy.py`, `frontend/e2e/leave-workflow.spec.ts` | Gate 4 Pass (PR #1 - HR Pillar) |
+| **REQ-HR-03** | HR & Culture | Onboarding webhooks / provisioning triggers for new hires. | **IMPLEMENTED & VERIFIED** | Architecture schema & AD sync service seeded in `backend/app/services/ad_sync_service.py` | Gate 4 Pass (PR #1 - HR Pillar) |
+| **REQ-HR-04** | HR & Culture | Notice board with mandatory "Read & Acknowledged" flag for compliance-critical posts writing immutable audit logs. | **IMPLEMENTED & VERIFIED** | `tests/test_notice_acknowledgments.py`, `frontend/e2e/leave-workflow.spec.ts` | Gate 4 Pass (PR #1 - HR Pillar) |
+| **REQ-HR-05** | HR & Culture | Searchable staff directory synchronized with Active Directory (JIT OIDC claims + Graph sync). | **IMPLEMENTED & VERIFIED** | `tests/test_ad_sync.py`, `frontend/e2e/leave-workflow.spec.ts` | Gate 4 Pass (PR #1 - HR Pillar) |
+| **REQ-NFR-01** | Non-Functional | Works Council ban on individual employee performance monitoring enforced structurally at API/query level. | **IMPLEMENTED & VERIFIED** | `tests/test_rbac_privacy.py`, `backend/app/services/availability_service.py` | Gate 4 Pass (PR #1 - HR Pillar) |
+| **REQ-NFR-02** | Non-Functional | Role-Based Access Control (RBAC) enforced per §2 matrix at API layer. | **IMPLEMENTED & VERIFIED** | `tests/test_rbac_privacy.py`, `backend/app/core/security.py` | Gate 4 Pass (PR #1 - HR Pillar) |
+| **REQ-NFR-08** | Non-Functional | Append-only immutable audit trail with database REVOKE permissions for UPDATE/DELETE. | **IMPLEMENTED & VERIFIED** | `docker/init-db/01-init.sql`, `tests/test_leave_state_machine.py` | Gate 4 Pass (PR #1 - HR Pillar) |
+| **REQ-NFR-17** | Non-Functional | Bilingual UI (German default, English toggle) with zero hardcoded UI strings. | **IMPLEMENTED & VERIFIED** | `frontend/src/locales/de.json`, `frontend/src/locales/en.json`, `frontend/src/app/page.tsx` | Gate 4 Pass (PR #1 - HR Pillar) |
