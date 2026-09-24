@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { CheckCircle2, ShieldCheck, AlertCircle, FileText } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface NoticePostProps {
   id: string;
@@ -13,6 +15,11 @@ interface NoticePostProps {
   locale?: "de" | "en";
 }
 
+/**
+ * NoticeBoardCard Component (REQ-HR-04)
+ * Density: Comfortable
+ * Includes audit-compliant "Read & Acknowledged" workflow.
+ */
 export const NoticeBoardCard: React.FC<NoticePostProps> = ({
   id,
   title,
@@ -45,27 +52,30 @@ export const NoticeBoardCard: React.FC<NoticePostProps> = ({
   );
 
   return (
-    <div
-      className={`p-6 rounded-xl border shadow-sm transition-all ${
+    <article
+      className={`p-6 rounded-md border shadow-sm transition-all ${
         isMandatoryAck && !acknowledged
-          ? "border-amber-300 bg-amber-50/30 ring-1 ring-amber-200"
-          : "border-slate-200 bg-white"
+          ? "border-status-pending-border bg-status-pending-bg/40"
+          : "border-neutral-200 bg-neutral-0"
       }`}
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-        <h4 className="text-base font-semibold text-slate-850">{title}</h4>
-        <span className="text-xs text-slate-500">{formattedDate}</span>
+        <div className="flex items-center gap-2">
+          <FileText className="w-4 h-4 text-brand-500 shrink-0" aria-hidden="true" />
+          <h4 className="text-base font-semibold text-neutral-900">{title}</h4>
+        </div>
+        <span className="text-xs text-neutral-700">{formattedDate}</span>
       </div>
 
-      <div className="text-sm text-slate-700 whitespace-pre-line mb-4">
+      <div className="text-sm text-neutral-900 leading-relaxed whitespace-pre-line mb-5">
         {content}
       </div>
 
       {isMandatoryAck && (
-        <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="text-xs text-slate-500 flex items-center gap-1.5">
-            <span className="inline-block w-2 h-2 rounded-full bg-amber-500" />
-            <span>
+        <div className="pt-4 border-t border-neutral-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="text-xs text-neutral-700 flex items-center gap-1.5">
+            <AlertCircle className="w-3.5 h-3.5 text-status-pending shrink-0" aria-hidden="true" />
+            <span className="font-medium">
               {locale === "de"
                 ? "Verpflichtende Kenntnisnahme (ISO 13485 QMS)"
                 : "Mandatory Acknowledgment (ISO 13485 QMS)"}
@@ -73,22 +83,24 @@ export const NoticeBoardCard: React.FC<NoticePostProps> = ({
           </div>
 
           {acknowledged ? (
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
-              ✓ {locale === "de" ? "Gelesen & Zur Kenntnis genommen" : "Read & Acknowledged"}
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm text-xs font-semibold bg-status-success-bg text-status-success-text border border-status-success-border">
+              <CheckCircle2 className="w-3.5 h-3.5 text-status-success" aria-hidden="true" />
+              <span>{locale === "de" ? "Gelesen & Zur Kenntnis genommen" : "Read & Acknowledged"}</span>
             </span>
           ) : (
-            <button
+            <Button
               onClick={handleAck}
-              disabled={loading}
-              className="px-4 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors disabled:opacity-50"
+              isLoading={loading}
+              density="comfortable"
+              variant="primary"
+              className="bg-brand-500 hover:bg-brand-600"
+              leftIcon={<ShieldCheck className="w-4 h-4" aria-hidden="true" />}
             >
-              {loading
-                ? (locale === "de" ? "Wird signiert..." : "Signing...")
-                : (locale === "de" ? "Gelesen & Bestätigen" : "Read & Acknowledge")}
-            </button>
+              {locale === "de" ? "Gelesen & Bestätigen" : "Read & Acknowledge"}
+            </Button>
           )}
         </div>
       )}
-    </div>
+    </article>
   );
 };

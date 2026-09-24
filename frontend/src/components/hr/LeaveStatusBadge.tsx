@@ -1,50 +1,70 @@
 import React from "react";
+import { StatusBadge, StatusCategory } from "@/components/ui/status-badge";
+import { FileEdit, Clock, CheckCircle2, XCircle, Ban } from "lucide-react";
 
 export type LeaveStatus = "draft" | "pending_manager" | "approved" | "rejected" | "cancelled";
 
 interface LeaveStatusBadgeProps {
   status: LeaveStatus;
   locale?: "de" | "en";
+  size?: "sm" | "md";
 }
 
-const statusLabels: Record<string, { de: string; en: string; style: string }> = {
+const LEAVE_STATUS_CONFIG: Record<
+  LeaveStatus,
+  { category: StatusCategory; de: string; en: string; icon: any }
+> = {
   draft: {
+    category: "neutral",
     de: "Entwurf",
     en: "Draft",
-    style: "bg-slate-100 text-slate-700 border-slate-300",
+    icon: FileEdit,
   },
   pending_manager: {
-    de: "Ausstehend (Vorgesetzter)",
+    category: "pending",
+    de: "Wartet auf Genehmigung",
     en: "Pending Manager",
-    style: "bg-amber-50 text-amber-700 border-amber-300",
+    icon: Clock,
   },
   approved: {
+    category: "success",
     de: "Genehmigt",
     en: "Approved",
-    style: "bg-emerald-50 text-emerald-700 border-emerald-300",
+    icon: CheckCircle2,
   },
   rejected: {
+    category: "danger",
     de: "Abgelehnt",
     en: "Rejected",
-    style: "bg-rose-50 text-rose-700 border-rose-300",
+    icon: XCircle,
   },
   cancelled: {
+    category: "info",
     de: "Storniert",
     en: "Cancelled",
-    style: "bg-slate-100 text-slate-500 border-slate-200 line-through",
+    icon: Ban,
   },
 };
 
-export const LeaveStatusBadge: React.FC<LeaveStatusBadgeProps> = ({ status, locale = "de" }) => {
-  const config = statusLabels[status] || statusLabels.draft;
+/**
+ * Reconciled LeaveStatusBadge (Design System v1.0 §6.3)
+ * Pairs Icon + Text Label + Color Tokens strictly. Never color alone.
+ */
+export const LeaveStatusBadge: React.FC<LeaveStatusBadgeProps> = ({
+  status,
+  locale = "de",
+  size = "md",
+}) => {
+  const config = LEAVE_STATUS_CONFIG[status] || LEAVE_STATUS_CONFIG.draft;
   const label = locale === "de" ? config.de : config.en;
 
   return (
-    <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${config.style}`}
-      data-testid={`status-badge-${status}`}
-    >
-      {label}
-    </span>
+    <StatusBadge
+      category={config.category}
+      label={label}
+      icon={config.icon}
+      size={size}
+      testId={`status-badge-${status}`}
+    />
   );
 };

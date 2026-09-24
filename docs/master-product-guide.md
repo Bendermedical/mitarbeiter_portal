@@ -1,11 +1,11 @@
-# BMV Staff Portal — Master Product Guide v1.2
+# BMV Staff Portal — Master Product Guide v1.3
 
 ## Document Control
 
 | Field | Value |
 |---|---|
 | Document | BMV Staff Portal — Master Product Guide |
-| Version | 1.2 |
+| Version | 1.3 |
 | Status | Draft for review |
 | Owner | Product/IT Leadership, BMV Bender Medical Vertrieb GmbH |
 | Applicable standards | ISO 13485 (QMS documentation discipline), DSGVO/GDPR, German Works Council (Betriebsrat) co-determination |
@@ -18,6 +18,7 @@
 | 1.0 | 2026-09-22 | Initial merged guide (SRS + Execution Guide → single spec) | — |
 | 1.1 | 2026-09-23 | Added REQ-HR-06: employees may edit a leave request while it's in `Draft`, before submission | — |
 | 1.2 | 2026-09-23 | Added `docs/design-system.md` as the concrete token/component source `agent_designer` builds against (§8.2); updated the citation in step 2 of §9 accordingly | — |
+| 1.3 | 2026-09-23 | Added Gate 2 (Foundation & Auth) prompt, exit checkpoint, and design system layout wiring to §10 | — |
 
 Every requirement below carries a stable ID (e.g. `REQ-HR-01`) so it can be traced from spec → build gate → test — required once this is a controlled document under an ISO 13485 QMS.
 
@@ -276,7 +277,25 @@ Antigravity 2.0 (Google's agent-first dev platform) has specific mechanics this 
 
 ## 10. Ready-to-Paste Execution Prompts
 
-Use this COMMAND structure in the Antigravity Manager View. The first block below kicks off Pillar 1; the pattern repeats for Pillars 2–4 by swapping the feature name and REQ- range.
+Use this COMMAND structure in the Antigravity Manager View.
+
+**Gate 2 — Foundation & Auth.** Runs once for the whole app, after Gate 1's UX/UI blueprint is compliance-approved and human-approved (§7 does not repeat Gates 0–2 per pillar — only Gate 3 runs once per pillar). This is also where `docs/design-system.md`'s base layout shells (§6.8) and Tailwind tokens (§8) get wired into real code for the first time, so it's worth running only after any Gate 1 design-system reconciliation is settled, not in parallel with it.
+
+```
+COMMAND: Initiate Foundation & Auth (Gate 2) — Docker Compose, AD SSO, base layouts, i18n scaffolding.
+
+agent_orchestrator: Confirm scope against Gate 2 exit criteria (§7) and REQ-IT-09, REQ-NFR-10, REQ-NFR-17. Issue the sequence below.
+agent_architect: Confirm the Gate 0 schema and OpenAPI contracts need no changes to support NextAuth.js → OIDC → Active Directory federation (REQ-IT-09). Specify that the Employee entity carries only AD-sourced fields — no local credential storage, no speculative fields (REQ-NFR-04).
+agent_designer: Scaffold next-intl (or equivalent) i18n routing with German (`[de]`) as the default locale and an English (`[en]`) toggle (REQ-NFR-17), externalizing every UI-chrome string to locale files from the start — no hardcoded strings in any base layout, and every label checked against German string length per docs/design-system.md §3. Build the two base layout shells directly from docs/design-system.md §6.8 and §4: the Employee shell (top nav, Comfortable density) and the Admin shell (collapsible left sidebar, Compact density). Apply the Tailwind theme/CSS variables from docs/design-system.md §8 verbatim — no ad hoc values at this stage either.
+agent_compliance: Confirm no local password storage path exists anywhere in the auth flow (REQ-IT-09); confirm the AD OIDC client secret and any webhook signing secrets are wired to environment/secrets-manager injection, never committed (REQ-NFR-10). Output COMPLIANCE APPROVED or COMPLIANCE VETO. (WAIT FOR APPROVAL — do not proceed until this line is APPROVED.)
+agent_developer: Implement the Docker Compose stack (Postgres, FastAPI backend, Next.js frontend) and the NextAuth.js → OIDC → Active Directory federation. Wire the Employee/Admin shells and i18n scaffolding to agent_designer's blueprint exactly. Do not begin until COMPLIANCE APPROVED is posted above.
+agent_qa_devops: Confirm all containers start clean from a fresh `docker compose up --build`. Simulate an AD SSO login end-to-end and confirm session handling via NextAuth.js. Confirm `[locale]` routing serves German by default, the English toggle works, and both base layout shells render correctly at their respective density.
+agent_docs: Record REQ-IT-09, REQ-NFR-10, and REQ-NFR-17 as satisfied at the foundation level in the traceability log under a "Foundation / Gate 2" entry — these aren't scoped to one pillar's REQ- range, so don't force them into the per-pillar log format used from Gate 3 onward.
+```
+
+**Checkpoint:** Gate 2's exit criteria (§7) require AD SSO simulated successfully, all containers starting clean, no local password path anywhere in the app, and i18n scaffolding in place with German default before Gate 3 work begins on the first pillar (HR, per the COMMAND above).
+
+**Gate 3 — Feature Implementation (Per Pillar).** The block below kicks off Pillar 1; the pattern repeats for Pillars 2–4 by swapping the feature name and REQ- range.
 
 ```
 COMMAND: Initiate HR & Culture Pillar (REQ-HR-01..05) via Gated SDLC.

@@ -3,18 +3,48 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 15, 23, 42;
-  --background-start-rgb: 248, 250, 252;
-  --background-end-rgb: 255, 255, 255;
+  /* Design System v1.0 CSS Variables (§8) */
+  --background: #FFFFFF;          /* neutral-0 */
+  --foreground: #161C24;          /* neutral-900 */
+  
+  --primary: #215B8F;             /* brand-500 */
+  --primary-hover: #1A4A76;       /* brand-600 */
+  --primary-active: #123657;      /* brand-700 */
+  --primary-foreground: #FFFFFF;
+  
+  --destructive: #B3261E;         /* status-danger */
+  --destructive-foreground: #FFFFFF;
+  
+  --border: #DFE4EA;              /* neutral-200 */
+  --input: #C4CCD6;               /* neutral-300 */
+  --ring: #215B8F;                /* brand-500 */
+  --radius: 0.5rem;               /* radius-md */
+}
+
+/* Density Mode Roots (§1 & §4) */
+[data-density="comfortable"] {
+  --row-height: 48px;
+  --input-height: 40px;
+  --form-spacing: 1.5rem;
+  --page-max-width: 48rem; /* 768px */
+}
+
+[data-density="compact"] {
+  --row-height: 36px;
+  --input-height: 32px;
+  --form-spacing: 0.75rem;
+  --page-max-width: 100rem; /* 1600px */
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: var(--foreground);
+  background-color: #F7F9FB; /* neutral-50 */
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   min-height: 100vh;
+}
+
+/* Accessible focus visible (§7.3) */
+:focus-visible {
+  outline: 2px solid #215B8F;
+  outline-offset: 2px;
 }
