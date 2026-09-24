@@ -1,14 +1,12 @@
-version: "3.8"
-
 services:
   db:
     image: postgres:16-alpine
     container_name: bmv-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: bmv_admin
-      POSTGRES_PASSWORD: bmv_secure_pass_2026
-      POSTGRES_DB: mitarbeiter_portal
+      POSTGRES_USER: ${POSTGRES_USER:-bmv_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bmv_secure_pass_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-mitarbeiter_portal}
     ports:
       - "5432:5432"
     volumes:
@@ -28,11 +26,12 @@ services:
     restart: unless-stopped
     environment:
       - POSTGRES_SERVER=db
-      - POSTGRES_USER=bmv_admin
-      - POSTGRES_PASSWORD=bmv_secure_pass_2026
-      - POSTGRES_DB=mitarbeiter_portal
+      - POSTGRES_USER=${POSTGRES_USER:-bmv_admin}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-bmv_secure_pass_2026}
+      - POSTGRES_DB=${POSTGRES_DB:-mitarbeiter_portal}
       - POSTGRES_PORT=5432
-      - AD_MOCK_ENABLED=true
+      - AD_MOCK_ENABLED=${AD_MOCK_ENABLED:-true}
+      - SECRET_KEY=${SECRET_KEY:-bmv_super_secret_jwt_key_2026_change_in_production}
     ports:
       - "8000:8000"
     depends_on:
@@ -52,6 +51,13 @@ services:
     restart: unless-stopped
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+      - INTERNAL_API_URL=http://backend:8000/api/v1
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-bmv_nextauth_secure_secret_token_2026}
+      - AD_MOCK_ENABLED=${AD_MOCK_ENABLED:-true}
+      - AZURE_AD_CLIENT_ID=${AZURE_AD_CLIENT_ID:-bmv-client-id-001}
+      - AZURE_AD_CLIENT_SECRET=${AZURE_AD_CLIENT_SECRET:-bmv-ad-secret-mock}
+      - AZURE_AD_TENANT_ID=${AZURE_AD_TENANT_ID:-bmv-tenant-id-001}
     ports:
       - "3000:3000"
     depends_on:

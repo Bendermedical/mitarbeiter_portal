@@ -1,6 +1,7 @@
 {
   "common": {
     "appName": "BMV Staff Portal",
+    "companyName": "Bender Medical Vertriebs GmbH",
     "search": "Search...",
     "save": "Save",
     "cancel": "Cancel",
@@ -8,7 +9,50 @@
     "status": "Status",
     "date": "Date",
     "actions": "Actions",
-    "language": "Language"
+    "language": "Language",
+    "toggleLanguage": "Toggle Language (DE / EN)",
+    "loading": "Loading...",
+    "close": "Close",
+    "collapse": "Collapse",
+    "expand": "Expand",
+    "keyboardShortcuts": "Keyboard Shortcuts",
+    "complianceBadge": "ISO 13485 QMS • BetrVG §87 • GDPR / DSGVO"
+  },
+  "shells": {
+    "employee": {
+      "title": "Staff Portal",
+      "densityLabel": "Comfortable Mode",
+      "navHome": "Overview",
+      "navLeave": "Leave Requests",
+      "navTickets": "IT Support",
+      "navFleetAssets": "My Devices & Fleet",
+      "navNotices": "Notice Board",
+      "navDirectory": "Staff Directory",
+      "userProfile": "My Profile"
+    },
+    "admin": {
+      "title": "Admin & Triage",
+      "densityLabel": "Compact Mode",
+      "navOverview": "System Overview",
+      "navTicketQueue": "IT Ticket Triage",
+      "navFleetRegistry": "Fleet Registry",
+      "navAssetLifecycle": "Hardware & Licenses",
+      "navAuditLogs": "Audit Logs (QMS)",
+      "navSettings": "Configuration",
+      "collapseSidebar": "Collapse sidebar",
+      "expandSidebar": "Expand sidebar",
+      "breadcrumbHome": "Home",
+      "shortcutHint": "Keyboard navigation active: Alt+1 to Alt+5 for quick access"
+    }
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "signInAD": "Sign In with Active Directory (SSO)",
+    "loggedInAs": "Signed in as",
+    "roleLabel": "Role",
+    "activeSession": "Active OIDC Session",
+    "noLocalPasswords": "Pure Active Directory Federation — zero local passwords stored (REQ-IT-09)"
   },
   "nav": {
     "dashboard": "Dashboard",

@@ -1,6 +1,7 @@
 {
   "common": {
     "appName": "BMV Mitarbeiterportal",
+    "companyName": "Bender Medical Vertriebs GmbH",
     "search": "Suchen...",
     "save": "Speichern",
     "cancel": "Abbrechen",
@@ -8,7 +9,50 @@
     "status": "Status",
     "date": "Datum",
     "actions": "Aktionen",
-    "language": "Sprache"
+    "language": "Sprache",
+    "toggleLanguage": "Sprache umschalten (DE / EN)",
+    "loading": "Wird geladen...",
+    "close": "Schließen",
+    "collapse": "Einklappen",
+    "expand": "Ausklappen",
+    "keyboardShortcuts": "Tastaturkürzel",
+    "complianceBadge": "ISO 13485 QMS • BetrVG §87 • DSGVO / GDPR"
+  },
+  "shells": {
+    "employee": {
+      "title": "Mitarbeiterportal",
+      "densityLabel": "Komfort-Modus",
+      "navHome": "Übersicht",
+      "navLeave": "Urlaubsanträge",
+      "navTickets": "IT-Support",
+      "navFleetAssets": "Meine Geräte & Fahrzeuge",
+      "navNotices": "Schwarzes Brett",
+      "navDirectory": "Mitarbeiterverzeichnis",
+      "userProfile": "Mein Profil"
+    },
+    "admin": {
+      "title": "Verwaltung & Triage",
+      "densityLabel": "Kompakt-Modus",
+      "navOverview": "System-Übersicht",
+      "navTicketQueue": "IT-Ticket-Triage",
+      "navFleetRegistry": "Fuhrpark-Register",
+      "navAssetLifecycle": "Geräte & Lizenzen",
+      "navAuditLogs": "Audit-Protokoll (QMS)",
+      "navSettings": "Konfiguration",
+      "collapseSidebar": "Seitenleiste einklappen",
+      "expandSidebar": "Seitenleiste ausklappen",
+      "breadcrumbHome": "Startseite",
+      "shortcutHint": "Tastaturbedienung aktiv: Alt+1 bis Alt+5 für schnelle Navigation"
+    }
+  },
+  "auth": {
+    "signIn": "Anmelden",
+    "signOut": "Abmelden",
+    "signInAD": "Mit Active Directory anmelden (SSO)",
+    "loggedInAs": "Angemeldet als",
+    "roleLabel": "Rolle",
+    "activeSession": "Aktive OIDC-Sitzung",
+    "noLocalPasswords": "Reine Active Directory-Föderation — keine lokalen Passwörter gespeichert (REQ-IT-09)"
   },
   "nav": {
     "dashboard": "Übersicht",

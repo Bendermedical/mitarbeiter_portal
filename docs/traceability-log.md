@@ -1,5 +1,18 @@
 # BMV Staff Portal — Traceability Log (ISO 13485 & Regulatory Audit Matrix)
 
+## Foundation / Gate 2 (Stack Infrastructure, AD SSO, Base Shells & i18n)
+
+| Requirement ID | Scope | Description | Implementation Status | Gate 2 Verification / Tests | Reference PR / Commit |
+|---|---|---|---|---|---|
+| **REQ-IT-09** | Foundation / Auth | Active Directory SSO federation via NextAuth.js / OpenID Connect (OIDC). Zero local password storage; user accounts provisioned/mapped strictly from corporate AD claims. | **SATISFIED (FOUNDATION)** | `frontend/src/lib/auth.ts`, `frontend/src/app/api/auth/[...nextauth]/route.ts`, `backend/app/api/v1/endpoints/auth.py` (`POST /api/v1/auth/oidc/exchange`), `backend/tests/test_ad_sync.py`, `frontend/e2e/gate2-foundation-auth.spec.ts` | Gate 2 Foundation & Auth Stack |
+| **REQ-NFR-04** | Foundation / Data Minimization | Data minimization (DSGVO Art. 5): Employee entity carries only AD-sourced directory fields (`ad_guid`, `email`, `department`, `job_title`, `role`, `ad_groups`). Zero password fields, zero credential hashes, zero speculative tracking fields. | **SATISFIED (FOUNDATION)** | `backend/app/models/employee.py`, `backend/app/schemas/employee.py`, schema audit | Gate 2 Foundation & Auth Stack |
+| **REQ-NFR-10** | Foundation / Security | Secrets management: AD OIDC client secrets, JWT signing keys, and webhook secrets injected strictly via environment/secrets manager (`.env` / Docker environment), never committed to source repository. | **SATISFIED (FOUNDATION)** | `docker-compose.yml`, `backend/app/core/config.py`, `.gitignore` audit | Gate 2 Foundation & Auth Stack |
+| **REQ-NFR-17** | Foundation / i18n | Bilingual UI scaffolding with German (`[de]`) default locale and English (`[en]`) toggle. All chrome and shell navigation externalized to locale files. Length tolerances (+20–35% for German per Design System §3) verified against both shell blueprints. | **SATISFIED (FOUNDATION)** | `frontend/src/locales/de.json`, `frontend/src/locales/en.json`, `frontend/src/components/layout/EmployeeShell.tsx`, `frontend/src/components/layout/AdminShell.tsx`, `frontend/e2e/gate2-foundation-auth.spec.ts` | Gate 2 Foundation & Auth Stack |
+
+---
+
+## Pillar 1: HR & Culture (Gate 3 & Gate 4)
+
 | Requirement ID | Pillar | Description | Implementation Status | Gate 4 Verification / Tests | Reference PR / Commit |
 |---|---|---|---|---|---|
 | **REQ-HR-01** | HR & Culture | Leave requests follow a strict state machine: `Draft → Pending Manager → Approved / Rejected → Cancelled`. Rejection requires mandatory reason. | **IMPLEMENTED & VERIFIED** | `tests/test_leave_state_machine.py`, `frontend/e2e/leave-workflow.spec.ts` | Gate 4 Pass (PR #1 - HR Pillar); Gate 1 UI reconciled (`/hr/leave`) |

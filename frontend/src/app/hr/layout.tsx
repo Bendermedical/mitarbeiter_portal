@@ -38,7 +38,7 @@ export default function HRLayout({ children }: { children: React.ReactNode }) {
   ];
 
   return (
-    <div className="min-h-screen bg-neutral-50 flex flex-col font-sans">
+    <div data-density="comfortable" className="min-h-screen bg-neutral-50 flex flex-col font-sans">
       {/* Top Header / App Shell */}
       <header className="bg-neutral-0 border-b border-neutral-200 sticky top-0 z-30 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
