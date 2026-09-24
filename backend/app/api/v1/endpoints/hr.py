@@ -9,6 +9,7 @@ from app.core.rbac import Permission, UserRole
 from app.models.employee import Employee
 from app.schemas.leave import (
     LeaveRequestCreate,
+    LeaveRequestUpdate,
     LeaveRequestRead,
     LeaveRequestTransition,
     TeamAvailabilityAggregateResponse,
@@ -18,9 +19,14 @@ from app.schemas.notice import (
     NoticePostRead,
     NoticeAcknowledgmentRead,
 )
+from app.schemas.employee import (
+    NewHireOnboardingRequest,
+    NewHireOnboardingResponse,
+)
 from app.services.leave_service import LeaveService
 from app.services.availability_service import AvailabilityService
 from app.services.notice_service import NoticeService
+from app.services.onboarding_service import OnboardingService
 
 router = APIRouter()
 
@@ -55,6 +61,24 @@ def get_my_leave_requests(
     return LeaveService.get_employee_leave_requests(
         db=db,
         employee_id=current_user.id,
+    )
+
+@router.patch("/leave-requests/{leave_id}", response_model=LeaveRequestRead)
+def update_draft_leave_request(
+    leave_id: UUID,
+    payload: LeaveRequestUpdate,
+    current_user: Employee = Depends(require_permission(Permission.LEAVE_CREATE_OWN)),
+    db: Session = Depends(get_db),
+) -> Any:
+    """
+    Update a leave request while in DRAFT status (REQ-HR-06).
+    Post-submission edits are prohibited (requires cancellation and recreate).
+    """
+    return LeaveService.update_draft_leave_request(
+        db=db,
+        leave_id=leave_id,
+        payload=payload,
+        current_user=current_user,
     )
 
 @router.post("/leave-requests/{leave_id}/transition", response_model=LeaveRequestRead)
@@ -173,3 +197,25 @@ def acknowledge_compliance_notice(
         employee=current_user,
         client_ip=client_ip,
     )
+
+# --- New-Hire Onboarding Webhooks (REQ-HR-03) ---
+
+@router.post("/onboarding/new-hire", response_model=NewHireOnboardingResponse, status_code=status.HTTP_201_CREATED)
+def onboard_new_hire(
+    payload: NewHireOnboardingRequest,
+    request: Request,
+    current_user: Employee = Depends(require_permission(Permission.ONBOARDING_WRITE)),
+    db: Session = Depends(get_db),
+) -> Any:
+    """
+    Onboard a new hire, firing parallel identity and IT queue webhooks (REQ-HR-03).
+    Only HR Admins are authorized per §2 RBAC.
+    """
+    client_ip = request.client.host if request.client else None
+    return OnboardingService.process_new_hire(
+        db=db,
+        payload=payload,
+        actor=current_user,
+        client_ip=client_ip,
+    )
+

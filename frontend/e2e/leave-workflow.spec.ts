@@ -80,4 +80,38 @@ test.describe("HR & Culture Pillar E2E Tests (REQ-HR-01..05 & REQ-NFR-01/02)", (
     await expect(page.locator('text=Markus Fischer')).toBeVisible();
     await expect(page.locator('text=Anna Schmidt')).not.toBeVisible();
   });
+
+  test("REQ-HR-06: Draft-State Edits Allowed and Post-Submission Edits Forbidden", async ({ page }) => {
+    // Navigate directly to a draft leave request detail page
+    await page.click('button:has-text("Thomas (Employee)")');
+    await page.goto("/hr/leave/req-mock-draft-001");
+
+    // Verify Draft Status
+    await expect(page.locator('text=Entwurf')).toBeVisible();
+
+    // Verify Bearbeiten button exists in Draft state
+    const editBtn = page.locator('button:has-text("Bearbeiten")');
+    await expect(editBtn).toBeVisible();
+
+    // Click Bearbeiten (REQ-HR-06)
+    await editBtn.click();
+    await expect(page.locator('text=Entwurf bearbeiten (REQ-HR-06)')).toBeVisible();
+
+    // Update form fields
+    await page.fill('input[name="end_date"]', "2026-10-18");
+    await page.fill('textarea[name="notes"]', "Aktualisierter Entwurfsgrund gemäss REQ-HR-06");
+    await page.click('button:has-text("Entwurf speichern")');
+
+    // Verify success feedback
+    await expect(page.locator('text=Entwurf erfolgreich aktualisiert (REQ-HR-06)')).toBeVisible();
+
+    // Submit the draft
+    await page.click('button:has-text("Einreichen")');
+    await expect(page.locator('text=Urlaubsantrag erfolgreich zur Prüfung eingereicht (REQ-HR-01)')).toBeVisible();
+    await expect(page.locator('text=Wartet auf Genehmigung')).toBeVisible();
+
+    // Verification: Post-submission edit button must NO LONGER be present
+    await expect(page.locator('button:has-text("Bearbeiten")')).toHaveCount(0);
+  });
 });
+

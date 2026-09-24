@@ -21,6 +21,7 @@ class Permission(str, Enum):
     LEAVE_READ_ALL = "leave:read_all"
     LEAVE_WRITE_ALL = "leave:write_all"
     TEAM_AVAILABILITY_AGGREGATE = "team:availability_aggregate"
+    ONBOARDING_WRITE = "onboarding:write"
     
     # Directory & Notices
     DIRECTORY_READ = "directory:read"
@@ -63,6 +64,7 @@ ROLE_PERMISSIONS: dict[UserRole, Set[Permission]] = {
         Permission.NOTICE_READ,
         Permission.NOTICE_ACKNOWLEDGE,
         Permission.NOTICE_WRITE,
+        Permission.ONBOARDING_WRITE,
     },
     UserRole.IT_AGENT: {
         Permission.LEAVE_READ_OWN,

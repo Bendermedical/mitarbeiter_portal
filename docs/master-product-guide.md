@@ -1,15 +1,15 @@
-# BMV Staff Portal — Master Product Guide v1.3
+# BMV Staff Portal — Master Product Guide v1.4
 
 ## Document Control
 
 | Field | Value |
 |---|---|
 | Document | BMV Staff Portal — Master Product Guide |
-| Version | 1.3 |
+| Version | 1.4 |
 | Status | Draft for review |
 | Owner | Product/IT Leadership, BMV Bender Medical Vertrieb GmbH |
 | Applicable standards | ISO 13485 (QMS documentation discipline), DSGVO/GDPR, German Works Council (Betriebsrat) co-determination |
-| Last updated | 2026-09-23 |
+| Last updated | 2026-09-24 |
 
 **Version history** (REQ-NFR-09):
 
@@ -18,7 +18,8 @@
 | 1.0 | 2026-09-22 | Initial merged guide (SRS + Execution Guide → single spec) | — |
 | 1.1 | 2026-09-23 | Added REQ-HR-06: employees may edit a leave request while it's in `Draft`, before submission | — |
 | 1.2 | 2026-09-23 | Added `docs/design-system.md` as the concrete token/component source `agent_designer` builds against (§8.2); updated the citation in step 2 of §9 accordingly | — |
-| 1.3 | 2026-09-23 | Added Gate 2 (Foundation & Auth) prompt, exit checkpoint, and design system layout wiring to §10 | — |
+| 1.3 | 2026-09-23 | Added the Gate 2 (Foundation & Auth) ready-to-paste COMMAND to §10, following Gate 1 | — |
+| 1.4 | 2026-09-24 | Revised the Gate 3 HR-pillar COMMAND in §10: removed schema/blueprint regeneration now that Gates 0–2 are complete and approved, added the previously-missing REQ-HR-06 to scope, and added a design-system-drift check | — |
 
 Every requirement below carries a stable ID (e.g. `REQ-HR-01`) so it can be traced from spec → build gate → test — required once this is a controlled document under an ISO 13485 QMS.
 
@@ -277,7 +278,21 @@ Antigravity 2.0 (Google's agent-first dev platform) has specific mechanics this 
 
 ## 10. Ready-to-Paste Execution Prompts
 
-Use this COMMAND structure in the Antigravity Manager View.
+Use this COMMAND structure in the Antigravity Manager View. The first block below kicks off Pillar 1; the pattern repeats for Pillars 2–4 by swapping the feature name and REQ- range.
+
+```
+COMMAND: Implement HR & Culture Pillar (Gate 3, REQ-HR-01..06).
+
+agent_orchestrator: Confirm this pillar's Gate 0 schema and Gate 1 UX blueprint are both compliance-approved and unchanged since Gate 2 closed. Confirm scope against REQ-HR-01..06 and REQ-NFR-01/02/17. Issue the sequence below.
+agent_architect: No new schema work — this was closed at Gate 0. Confirm the LeaveRequest, NoticeAcknowledgment, and AuditLogEntry tables and OpenAPI contract are final for this pillar, and confirm REQ-HR-06 (Draft-state edits, added in guide v1.1) needs no endpoint beyond what that contract already defines — Draft edits are same-resource `PATCH` calls, not a new state or table (per REQ-HR-06's note that only the state transition itself is audit-logged, not each edit).
+agent_designer: No new blueprinting — this was closed at Gate 1. Confirm the approved component-hierarchy artifact for the leave request flow (employee view, Comfortable density) and the aggregate team-availability view (manager view — no individual history, REQ-HR-02) still matches docs/design-system.md's tokens, states, and mappings after the Gate 1 reconciliation. Flag any drift for a design-system update rather than patching it inline.
+agent_compliance: Review the HR endpoints and screens agent_developer is about to implement against §2 RBAC and §4 NFRs — specifically REQ-HR-02 (no individual sick-leave data ever reaches a manager view) and REQ-NFR-08 (every leave state transition, including the Draft → Pending Manager transition introduced by REQ-HR-06, writes an append-only audit row). Output COMPLIANCE APPROVED or COMPLIANCE VETO with the specific fix required. (WAIT FOR APPROVAL — do not proceed until this line is APPROVED.)
+agent_developer: Implement the FastAPI backend and Next.js frontend for the HR pillar per the approved Gate 0 schema and Gate 1/2 blueprint — the leave-request state machine including Draft-state edits (REQ-HR-01, REQ-HR-06), notice-board acknowledgment (REQ-HR-04), staff-directory sync (REQ-HR-05), and the new-hire onboarding webhooks (REQ-HR-03). Do not begin until COMPLIANCE APPROVED is posted above.
+agent_qa_devops: Write Playwright tests covering the full leave-approval state machine (Draft → Pending Manager → Approved/Rejected → Cancelled), explicitly including that Draft-state edits succeed and post-submission edits are rejected (REQ-HR-06); confirm the manager dashboard never renders individual sick-leave data (REQ-HR-02); confirm every state transition writes a correct, immutable audit row (REQ-NFR-08).
+agent_docs: On Gate 4 pass, record REQ-HR-01..06 as implemented in the traceability log with the corresponding PR reference.
+```
+
+**First-run checkpoint:** before running the block above for real, confirm in the Manager View: *Does this agent squad configuration, gate sequence, and Review Gate preset match what you expect for the Antigravity workspace? If approved, this executes Gate 0 for the HR pillar and produces the foundational PostgreSQL schema and OpenAPI contract as the first reviewable artifact.*
 
 **Gate 2 — Foundation & Auth.** Runs once for the whole app, after Gate 1's UX/UI blueprint is compliance-approved and human-approved (§7 does not repeat Gates 0–2 per pillar — only Gate 3 runs once per pillar). This is also where `docs/design-system.md`'s base layout shells (§6.8) and Tailwind tokens (§8) get wired into real code for the first time, so it's worth running only after any Gate 1 design-system reconciliation is settled, not in parallel with it.
 
@@ -294,22 +309,6 @@ agent_docs: Record REQ-IT-09, REQ-NFR-10, and REQ-NFR-17 as satisfied at the fou
 ```
 
 **Checkpoint:** Gate 2's exit criteria (§7) require AD SSO simulated successfully, all containers starting clean, no local password path anywhere in the app, and i18n scaffolding in place with German default before Gate 3 work begins on the first pillar (HR, per the COMMAND above).
-
-**Gate 3 — Feature Implementation (Per Pillar).** The block below kicks off Pillar 1; the pattern repeats for Pillars 2–4 by swapping the feature name and REQ- range.
-
-```
-COMMAND: Initiate HR & Culture Pillar (REQ-HR-01..05) via Gated SDLC.
-
-agent_orchestrator: Confirm scope against REQ-HR-01..05 and REQ-NFR-01/02/17. Issue the sequence below.
-agent_architect: Generate the PostgreSQL schema (LeaveRequest, NoticeAcknowledgment, AuditLogEntry writes) and OpenAPI contract for Gate 0. Confirm audit tables are append-only per REQ-NFR-08.
-agent_designer: Generate component blueprints for the leave request flow (employee view) and the aggregate team-availability view (manager view — no individual history, REQ-HR-02).
-agent_compliance: Review architecture & design against §2 RBAC matrix and §4 NFRs. Output COMPLIANCE APPROVED or COMPLIANCE VETO with the specific fix required. (WAIT FOR APPROVAL — do not proceed until this line is APPROVED.)
-agent_developer: Implement the FastAPI backend and Next.js frontend per the approved schema and blueprint. Do not begin until COMPLIANCE APPROVED is posted above.
-agent_qa_devops: Update Docker Compose if needed; write Playwright tests covering the full leave-approval state machine (Draft → Pending Manager → Approved/Rejected → Cancelled) and confirm the manager dashboard never renders individual sick-leave data.
-agent_docs: On Gate 4 pass, record REQ-HR-01..05 as implemented in the traceability log with the corresponding PR reference.
-```
-
-**First-run checkpoint:** before running the block above for real, confirm in the Manager View: *Does this agent squad configuration, gate sequence, and Review Gate preset match what you expect for the Antigravity workspace? If approved, this executes Gate 0 for the HR pillar and produces the foundational PostgreSQL schema and OpenAPI contract as the first reviewable artifact.*
 
 ## 11. Phase 2 Backlog
 

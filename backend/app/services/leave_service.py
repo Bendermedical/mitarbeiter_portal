@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.models.leave import LeaveRequest, LeaveStatus, LeaveCategory
 from app.models.employee import Employee
 from app.core.rbac import UserRole, Permission, verify_role_has_permission
-from app.schemas.leave import LeaveRequestCreate, LeaveRequestTransition
+from app.schemas.leave import LeaveRequestCreate, LeaveRequestUpdate, LeaveRequestTransition
 from app.services.audit_service import AuditService
 
 VALID_TRANSITIONS = {
@@ -66,6 +66,59 @@ class LeaveService:
             .order_by(LeaveRequest.created_at.desc())
             .all()
         )
+
+    @staticmethod
+    def update_draft_leave_request(
+        db: Session,
+        leave_id: UUID,
+        payload: LeaveRequestUpdate,
+        current_user: Employee,
+    ) -> LeaveRequest:
+        """
+        Update a leave request while in DRAFT status (REQ-HR-06).
+        Server-side owner-only enforcement per §2.
+        Post-submission edits are strictly prohibited.
+        """
+        leave_req = db.query(LeaveRequest).filter(LeaveRequest.id == leave_id).first()
+        if not leave_req:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Leave request not found",
+            )
+
+        # Enforce server-side owner-only per §2
+        if leave_req.employee_id != current_user.id and current_user.role != UserRole.HR_ADMIN:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Only the requesting employee or HR Admin can edit a leave request",
+            )
+
+        # Enforce Draft-only editing (REQ-HR-06)
+        if leave_req.status != LeaveStatus.DRAFT:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Cannot edit leave request in '{leave_req.status.value}' status. Edits are restricted to Draft status only (REQ-HR-06). Post-submission changes require cancellation.",
+            )
+
+        if payload.category is not None:
+            leave_req.category = payload.category
+        if payload.start_date is not None:
+            leave_req.start_date = payload.start_date
+        if payload.end_date is not None:
+            leave_req.end_date = payload.end_date
+        if payload.notes is not None:
+            leave_req.notes = payload.notes
+
+        if leave_req.end_date < leave_req.start_date:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="end_date must be greater than or equal to start_date",
+            )
+
+        # REQ-HR-06: Draft edits are not individually written to audit log; state transition is (REQ-NFR-08)
+        db.commit()
+        db.refresh(leave_req)
+        return leave_req
 
     @staticmethod
     def transition_leave_request(

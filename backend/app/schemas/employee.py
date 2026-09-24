@@ -49,3 +49,24 @@ class ADSecurityGroupMappingRead(ADSecurityGroupMappingBase):
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+class NewHireOnboardingRequest(BaseModel):
+    first_name: str
+    last_name: str
+    email: EmailStr
+    department: str
+    job_title: str
+    ad_guid: Optional[str] = None
+    manager_id: Optional[UUID] = None
+    role: UserRole = UserRole.EMPLOYEE
+    hardware_requirements: Optional[List[str]] = None
+
+class WebhookDispatchResult(BaseModel):
+    target: str
+    status: str
+    detail: str
+
+class NewHireOnboardingResponse(BaseModel):
+    employee: EmployeeRead
+    webhooks_dispatched: List[WebhookDispatchResult]
+

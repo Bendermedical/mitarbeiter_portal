@@ -19,6 +19,12 @@ class LeaveRequestBase(BaseModel):
 class LeaveRequestCreate(LeaveRequestBase):
     pass
 
+class LeaveRequestUpdate(BaseModel):
+    category: Optional[LeaveCategory] = None
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    notes: Optional[str] = None
+
 class LeaveRequestTransition(BaseModel):
     target_status: LeaveStatus
     rejection_reason: Optional[str] = None
